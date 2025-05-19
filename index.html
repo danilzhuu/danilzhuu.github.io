@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Моё резюме</title>
+    <style>
+        /* Стили для модального окна проверки возраста */
+        .age-verification {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        
+        .age-dialog {
+            background-color: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+        }
+        
+        .age-dialog h2 {
+            color: #2c3e50;
+            margin-top: 0;
+        }
+        
+        .age-dialog input {
+            width: 100%;
+            padding: 10px;
+            margin: 15px 0;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        
+        .age-dialog button {
+            padding: 10px 20px;
+            margin: 0 10px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .confirm-btn {
+            background-color: #4a90e2;
+            color: white;
+        }
+        
+        .confirm-btn:hover {
+            background-color: #357ab8;
+        }
+        
+        .cancel-btn {
+            background-color: #e74c3c;
+            color: white;
+        }
+        
+        .cancel-btn:hover {
+            background-color: #c0392b;
+        }
+        
+        /* Остальные стили для резюме */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f8ff;
+            transition: background-color 0.5s ease;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            display: none; /* Сначала скрываем резюме */
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #4a90e2;
+            padding-bottom: 20px;
+        }
+        
+        .photo {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid #4a90e2;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            margin-bottom: 20px;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            margin: 10px 0;
+            font-size: 2.5em;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+        
+        .name {
+            color: #4a90e2;
+        }
+        
+        .surname {
+            color: #e74c3c;
+            transition: all 0.3s ease;
+        }
+        
+        .title {
+            color: #7f8c8d;
+            font-style: italic;
+            margin-bottom: 20px;
+        }
+        
+        section {
+            margin-bottom: 25px;
+        }
+        
+        h2 {
+            color: #4a90e2;
+            border-bottom: 1px dashed #4a90e2;
+            padding-bottom: 5px;
+            font-size: 1.5em;
+        }
+        
+        .skills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .skill {
+            background-color: #e1f5fe;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+        }
+        
+        .interactive {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 30px;
+            border: 1px solid #ddd;
+        }
+        
+        .input-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: border 0.3s;
+        }
+        
+        input[type="text"]:focus {
+            border-color: #4a90e2;
+            outline: none;
+            box-shadow: 0 0 5px rgba(74, 144, 226, 0.5);
+        }
+        
+        .buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn-primary {
+            background-color: #4a90e2;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #357ab8;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .btn-secondary {
+            background-color: #e74c3c;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #c0392b;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .contact-info {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+        
+        .contact-item {
+            display: flex;
+            align-items: center;
+            margin: 10px;
+        }
+        
+        .contact-icon {
+            margin-right: 10px;
+            color: #4a90e2;
+            font-size: 1.2em;
+        }
+        
+        .access-denied {
+            display: none;
+            text-align: center;
+            margin-top: 50px;
+            color: #e74c3c;
+            font-size: 24px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Модальное окно проверки возраста -->
+    <div class="age-verification" id="ageVerification">
+        <div class="age-dialog">
+            <h2>Проверка возраста</h2>
+            <p>Пожалуйста, введите ваш возраст для доступа к резюме:</p>
+            <input type="number" id="ageInput" placeholder="Ваш возраст" min="1" max="120">
+            <div>
+                <button class="confirm-btn" id="confirmAge">Подтвердить</button>
+                <button class="cancel-btn" id="cancelAge">Отмена</button>
+            </div>
+            <p id="ageError" style="color: #e74c3c; margin-top: 10px; display: none;">Пожалуйста, введите корректный возраст (от 1 до 120)</p>
+        </div>
+    </div>
+    
+    <!-- Сообщение о запрете доступа -->
+    <div class="access-denied" id="accessDenied">
+        <h2>Доступ запрещён</h2>
+        <p>К сожалению, вы слишком молоды для просмотра этого резюме.</p>
+    </div>
+    
+    <!-- Основное содержимое резюме -->
+    <div class="container" id="resumeContainer">
+        <header>
+            <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Моя фотография" class="photo">
+            <h1>
+                <span class="name">Даниил</span> 
+                <span class="surname" id="surname">Жуков</span>
+            </h1>
+            <p class="title">Frontend разработчик / UX дизайнер</p>
+        </header>
+        
+        <section>
+            <h2>Обо мне</h2>
+            <p>Профессиональный фронтенд-разработчик с 5-летним опытом создания адаптивных и интерактивных веб-приложений. Специализируюсь на JavaScript, React и Vue.js. Увлечен созданием удобных интерфейсов и оптимизацией пользовательского опыта.</p>
+        </section>
+        
+        <section>
+            <h2>Навыки</h2>
+            <div class="skills">
+                <span class="skill">HTML5</span>
+                <span class="skill">CSS3</span>
+                <span class="skill">JavaScript</span>
+                <span class="skill">React</span>
+                <span class="skill">Vue.js</span>
+                <span class="skill">TypeScript</span>
+                <span class="skill">SASS</span>
+                <span class="skill">Git</span>
+                <span class="skill">Webpack</span>
+                <span class="skill">UI/UX Design</span>
+            </div>
+        </section>
+        
+        <section>
+            <h2>Опыт работы</h2>
+            <article>
+                <h3>Senior Frontend Developer - TechSolutions Inc.</h3>
+                <p><em>2019 - настоящее время</em></p>
+                <ul>
+                    <li>Разработка и поддержка клиентской части крупного SaaS-продукта</li>
+                    <li>Оптимизация производительности приложения, что сократило время загрузки на 40%</li>
+                    <li>Руководство командой из 4 фронтенд-разработчиков</li>
+                </ul>
+            </article>
+            
+            <article>
+                <h3>Frontend Developer - WebArt Studio</h3>
+                <p><em>2016 - 2019</em></p>
+                <ul>
+                    <li>Создание адаптивных веб-сайтов для клиентов студии</li>
+                    <li>Внедрение современных подходов к разработке (BEM, компонентный подход)</li>
+                    <li>Участие в разработке внутреннего UI-фреймворка</li>
+                </ul>
+            </article>
+        </section>
+        
+        <section>
+            <h2>Образование</h2>
+            <article>
+                <h3>Магистр компьютерных наук</h3>
+                <p>Национальный технический университет, 2014-2016</p>
+            </article>
+            <article>
+                <h3>Бакалавр информационных технологий</h3>
+                <p>Национальный технический университет, 2010-2014</p>
+            </article>
+        </section>
+        
+        <div class="interactive">
+            <h2>Интерактивная часть</h2>
+            <div class="input-group">
+                <label for="newSurname">Изменить фамилию:</label>
+                <input type="text" id="newSurname" placeholder="Введите новую фамилию">
+            </div>
+            
+            <div class="buttons">
+                <button class="btn-primary" id="changeSurnameBtn">Изменить фамилию</button>
+                <button class="btn-secondary" id="changeBgColorBtn">Сменить цвет фона</button>
+            </div>
+            
+            <div class="input-group" style="margin-top: 20px;">
+                <label for="themeColor">Выберите цвет текста заголовков:</label>
+                <input type="color" id="themeColor" value="#4a90e2">
+                <button class="btn-primary" id="applyThemeBtn" style="margin-top: 10px;">Применить цвет</button>
+            </div>
+        </div>
+        
+        <div class="contact-info">
+            <div class="contact-item">
+                <span class="contact-icon">📧</span>
+                <span>danilzhuu@yandex.ru</span>
+            </div>
+            <div class="contact-item">
+                <span class="contact-icon">📱</span>
+                <span>+7 (904) 284-80-85</span>
+            </div>
+            <div class="contact-item">
+                <span class="contact-icon">🌐</span>
+                <span>github.com/danilzhuu</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Проверка возраста
+        document.addEventListener('DOMContentLoaded', function() {
+            const ageVerification = document.getElementById('ageVerification');
+            const ageInput = document.getElementById('ageInput');
+            const confirmAgeBtn = document.getElementById('confirmAge');
+            const cancelAgeBtn = document.getElementById('cancelAge');
+            const ageError = document.getElementById('ageError');
+            const resumeContainer = document.getElementById('resumeContainer');
+            const accessDenied = document.getElementById('accessDenied');
+            
+            // Показываем проверку возраста при загрузке
+            ageVerification.style.display = 'flex';
+            
+            confirmAgeBtn.addEventListener('click', function() {
+                const age = parseInt(ageInput.value);
+                
+                if (isNaN(age) || age < 1 || age > 120) {
+                    ageError.style.display = 'block';
+                    return;
+                }
+                
+                ageError.style.display = 'none';
+                
+                if (age >= 18) {
+                    // Доступ разрешен
+                    ageVerification.style.display = 'none';
+                    resumeContainer.style.display = 'block';
+                    
+                    // Инициализация интерактивных элементов резюме
+                    initResume();
+                } else {
+                    // Доступ запрещен
+                    ageVerification.style.display = 'none';
+                    accessDenied.style.display = 'block';
+                }
+            });
+            
+            cancelAgeBtn.addEventListener('click', function() {
+                ageVerification.style.display = 'none';
+                accessDenied.style.display = 'block';
+            });
+        });
+        
+        // Функция для инициализации интерактивных элементов резюме
+        function initResume() {
+            // Изменение фамилии
+            document.getElementById('changeSurnameBtn').addEventListener('click', function() {
+                const newSurname = document.getElementById('newSurname').value.trim();
+                if (newSurname) {
+                    document.getElementById('surname').textContent = newSurname;
+                    document.getElementById('newSurname').value = '';
+                } else {
+                    alert('Пожалуйста, введите новую фамилию');
+                }
+            });
+            
+            // Смена цвета фона
+            document.getElementById('changeBgColorBtn').addEventListener('click', function() {
+                const randomColor = '#' + Math.floor(Math.random()*16777215).toString(16);
+                document.body.style.backgroundColor = randomColor;
+            });
+            
+            // Изменение цвета темы
+            document.getElementById('applyThemeBtn').addEventListener('click', function() {
+                const color = document.getElementById('themeColor').value;
+                const headers = document.querySelectorAll('h2, .name, .contact-icon');
+                headers.forEach(header => {
+                    header.style.color = color;
+                });
+                
+                const borders = document.querySelectorAll('header, h2');
+                borders.forEach(border => {
+                    border.style.borderColor = color;
+                });
+                
+                document.querySelector('.photo').style.borderColor = color;
+            });
+            
+            // Дополнительный функционал - изменение размера фото при наведении
+            const photo = document.querySelector('.photo');
+            photo.addEventListener('mouseenter', function() {
+                this.style.transform = 'scale(1.05)';
+            });
+            photo.addEventListener('mouseleave', function() {
+                this.style.transform = 'scale(1)';
+            });
+        }
+    </script>
+</body>
+</html>
